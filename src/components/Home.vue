@@ -1,8 +1,10 @@
 <template>
   <div class = "box" >
-    <Headertpl v-bind:login="login_status"></Headertpl>
+    <Headertpl :login="login"  @dialogLogin="dialogLogin"></Headertpl>
     <Banner></Banner>
     <Footertpl></Footertpl>
+    <Login ref="login" @dialogReg="dialogReg" @LoginHandle="LoginHandle"></Login>
+    <Register ref="register"></Register>
   </div>
 
 </template>
@@ -11,17 +13,32 @@
 import Headertpl from './default/Header.vue'
 import Banner from './default/Banner.vue'
 import Footertpl from './default/Footer.vue'
+import Login from './common/Login.vue'
+import Register from './common/Register.vue'
 
 export default {
   data () {
     return {
-        login_status: 'true'
     }
   },
+  props:['login'],
   components: {
     Headertpl,
     Banner,
-    Footertpl
+    Footertpl,
+    Login,
+    Register
+  },
+  methods:{
+    LoginHandle(data){
+      this.$emit('LoginSuccess',data);
+    },
+    dialogLogin(){
+      this.$refs.login.dialogHandle();
+    },
+    dialogReg(){
+      this.$refs.register.dialogHandle();
+    }
   }
 }
 </script>
