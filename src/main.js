@@ -6,6 +6,8 @@ import VueRouter from 'vue-router'
 
 import Home from './components/Home.vue'
 import About from './components/About.vue'
+import Calc from './components/Calc.vue'
+import Main from './components/Main.vue'
 
 import axios from 'axios'
 
@@ -19,7 +21,9 @@ Vue.use(ElementUI)
 
 const routes = [ //定义路由
   { path: '/', component: Home},
-  { path: '/about',component: About}
+  { path: '/about',component: About},
+  { path: '/calc',component: Calc},
+  { path: '/main',component: Main}
 ]
 
 const router = new VueRouter({//创建路由实例

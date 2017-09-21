@@ -4,6 +4,9 @@
     <el-menu class="el-menu-demo" mode="horizontal">
       <router-link class="el-menu-item title" to="/" tag="li">首页</router-link>
       <router-link class="el-menu-item title" to="about" tag="li">关于</router-link>
+      <router-link class="el-menu-item title" to="calc" tag="li">calc</router-link>
+      <router-link v-if="login.valid_status"  class="el-menu-item title" to="main" tag="li">主</router-link>
+
 
       <el-submenu index=""  v-if="login.status">
         <template slot="title">{{login.name}}</template>

@@ -19,7 +19,8 @@ export default {
     return {
       login:{
         status : false,
-        name   : '-'
+        name   : '-',
+        valid_status : false,
       },
       fullscreenLoading:false,
     }
@@ -28,6 +29,7 @@ export default {
     LoginSuccess(data){
       this.login.status = true;
       this.login.name = data.name;
+      this.login.valid_status = data.valid_status;
     }
   },
   mounted:function(){
