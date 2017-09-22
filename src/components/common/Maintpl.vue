@@ -1,6 +1,6 @@
 <template>
   <div v-if="valid_status" class="main_center">
-    <el-row :gutter="20">
+    <el-row :gutter="0">
       <el-col :span="8"><h1>10086</h1></el-col>
       <el-col :span="8">
         <el-checkbox-group class="option" v-model="Option_check_list" @change="play_status">
@@ -10,49 +10,62 @@
       <el-col :span="8">1</el-col>
     </el-row>
 
-<el-row v-for="cp in cp_list" type="flex" :gutter="0" justify="center">
-      <el-col :span="1">{{cp.code}}</el-col>
-      <el-col v-if="wan_status" :span="4">
-        <el-row :gutter="20">
-          <el-col :span="10" v-html="zhijie1(wan(cp.code),'wan')"></el-col>
-          <el-col :span="7"><span class="dddfault">1</span></el-col>
-          <el-col :span="7">{{cp.code | wan | zhijie3('wan')}}</el-col>
-        </el-row>
-      </el-col>
-      <el-col v-if="qian_status" :span="4">
-        <el-row :gutter="20">
-          <el-col :span="8">q</el-col>
-          <el-col :span="8">10086</el-col>
-          <el-col :span="8">10086</el-col>
-        </el-row>
-      </el-col>
-      <el-col v-if="bai_status" :span="4">
-        <el-row :gutter="20">
-          <el-col :span="8">b</el-col>
-          <el-col :span="8">10086</el-col>
-          <el-col :span="8">10086</el-col>
-        </el-row>
-      </el-col>
-      <el-col v-if="shi_status" :span="4">
-        <el-row :gutter="20">
-          <el-col :span="8">s</el-col>
-          <el-col :span="8">10086</el-col>
-          <el-col :span="8">10086</el-col>
-        </el-row>
-      </el-col>
-      <el-col v-if="ge_status" :span="4">
-        <el-row :gutter="20">
-          <el-col :span="8">g</el-col>
-          <el-col :span="8">10086</el-col>
-          <el-col :span="8">10086</el-col>
-        </el-row>
-      </el-col>
+<el-row v-for="cp in cp_list" type="flex" :gutter="0" class="main_center_item"  :style="{ width: cp_width + 'px' }">
+      <div>{{cp.qihao}}</div>|
+      <div>{{cp.code}}</div>
+      <div v-if="wan_status">
+          <div class="zhijie1">
+          <span @click="choosespan(cp.qihao,item,index)" v-for="(item,index) in zhijie1(cp,'wan')" :class="item.status">
+              {{item.code}}
+          </span>
+          </div>
+          <div class="zhijie2"><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span></div>
+          <div class="zhijie3"><span>1</span><span>1</span><span>1</span><span>1</span></div>
+      </div>
+      <div v-if="qian_status">
+          <div class="zhijie1">
+          <span v-for="item in zhijie1(cp,'wan')" :class="item.status=='selected' ? 'selected' : 'noselect'">
+              {{item.code}}
+          </span>
+          </div>
+          <div class="zhijie2"><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span></div>
+          <div class="zhijie3"><span>1</span><span>1</span><span>1</span><span>1</span></div>
+      </div>
+      <div v-if="bai_status">
+          <div class="zhijie1">
+          <span v-for="item in zhijie1(cp,'wan')" :class="item.status=='selected' ? 'selected' : 'noselect'">
+              {{item.code}}
+          </span>
+          </div>
+          <div class="zhijie2"><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span></div>
+          <div class="zhijie3"><span>1</span><span>1</span><span>1</span><span>1</span></div>
+      </div>
+      <div v-if="shi_status">
+          <div class="zhijie1">
+          <span v-for="item in zhijie1(cp,'wan')" :class="item.status=='selected' ? 'selected' : 'noselect'">
+              {{item.code}}
+          </span>
+          </div>
+          <div class="zhijie2"><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span></div>
+          <div class="zhijie3"><span>1</span><span>1</span><span>1</span><span>1</span></div>
+      </div>
+      <div v-if="ge_status">
+          <div class="zhijie1">
+          <span v-for="item in zhijie1(cp,'wan')" :class="item.status=='selected' ? 'selected' : 'noselect'">
+              {{item.code}}
+          </span>
+          </div>
+          <div class="zhijie2"><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span></div>
+          <div class="zhijie3"><span>1</span><span>1</span><span>1</span><span>1</span></div>
+      </div>
 </el-row>
 
 
   </div>
 </template>
 <script>
+  import Vue from 'vue'
+
   const Options = ['上海', '北京', '广州', '深圳','西安'];
   const SelectOptions = ['模式一', '模式二'];
   const mode = [
@@ -75,8 +88,9 @@
       return {
         valid_status:true,//登录状态
         Option_check_list:[],//头部选中记录
-        Option: Options,//头部选择器
+        Option: Options,//模式选择器
         
+        cp_width:795,//中段宽度 150 + 320x
         cp_list:[],//中奖列表
         cp_list_single : [],//分解中奖列表存储
         wan_status:false,
@@ -91,46 +105,47 @@
         ge_mode:1,
       };
     },
-    filters: {
-        wan(value){ return parseInt(value/10000);},
-        zhijie1(value,mode_status)
-        {
-          var ret='';
-          for(var i=0; i<6; i++){
-           ret = ret + '<span>' + mode[0][value][i] + '</span>';
-          }
-          
-          return ret;
-        },
-        zhijie2(value,mode_status)
-        {
-          return 'zhijie2';
-        },
-        zhijie3(value,mode_status)
-        {
-          return 'zhijie3';
-        }
-    },
     methods:{
-        wan(value){ return parseInt(value/10000);},
-        zhijie1(value,mode_status)
-        {
-          var ret='';
-          for(var i=0; i<6; i++){
-           ret = ret + "<span class='default'>" + mode[0][value][i] + "</span>";
+        wan(value){ return parseInt((value.toString()).slice(0,1));},
+        qian(value){ return parseInt((value.toString()).slice(1,1));},
+        bai(value){ return parseInt((value.toString()).slice(2,1));},
+        shi(value){ return parseInt((value.toString()).slice(3,1));},
+        ge(value){ return parseInt((value.toString()).slice(4,1));},
+        //肢解1号
+        zhijie1(cp,mode_status)
+        { 
+          // let last_cp_single = ;
+          let num;
+          this.cp_list_single[cp.qihao]=new Array();
+          if(mode_status == 'wan') num = this.wan(cp.code);
+          for(let i=0; i<10; i++){
+              this.cp_list_single[cp.qihao][i]=new Array();
+              this.cp_list_single[cp.qihao][i]['code']='';
+              this.cp_list_single[cp.qihao][i]['status_num']=1;
+              this.cp_list_single[cp.qihao][i]['status']='noselect';
+            for(let j=0; j<6;j++){
+              if(mode[0][num][j] == i+1) {
+                  this.cp_list_single[cp.qihao][i]['code']=this.PrefixInteger(i+1,2);
+                  this.cp_list_single[cp.qihao][i]['status_num']=1;
+                  this.cp_list_single[cp.qihao][i]['status']='selected';
+                }
+            }
           }
-          
-          return ret;
+          // console.log(this.cp_list_single);
+         return this.cp_list_single[cp.qihao];
         },
-        zhijie2(value,mode_status)
+        zhijie2(cp,mode_status)
         {
           return 'zhijie2';
         },
-        zhijie3(value,mode_status)
+        zhijie3(cp,mode_status)
         {
           return 'zhijie3';
         },
-
+        //补0大法
+        PrefixInteger(num, n) {
+            return (Array(n).join(0) + num).slice(-n);
+        },
         in_array(search,array){
             for(var i in array){
                 if(array[i]==search){
@@ -139,6 +154,14 @@
             }
             return false;
         },
+        choosespan(qihao,item,index){
+          // for(let i=0;i<this.cp_list_single[qihao][index].length;i++){
+          //     if(this.cp_list_single[qihao][index]['code']!='') this.cp_list_single[qihao][index]['status']='selected';
+          //     else this.cp_list_single[qihao][index]['status']='noselect';
+          // }
+          Vue.set(this.cp_list_single[qihao][index], 'status', 'jj');
+          console.log(this.cp_list_single[qihao],item,index);
+        },
         play_status(){
 
           this.wan_status = this.in_array('上海',this.Option_check_list);
@@ -146,11 +169,16 @@
           this.bai_status = this.in_array('广州',this.Option_check_list);
           this.shi_status = this.in_array('深圳',this.Option_check_list);
           this.ge_status = this.in_array('西安',this.Option_check_list);
+
+          if(this.Option_check_list.length>2 && this.Option_check_list.length<=3) this.cp_width = 1115;
+          else if(this.Option_check_list.length>3 && this.Option_check_list.length<5) this.cp_width = 1435;
+          else if(this.Option_check_list.length>=5) this.cp_width = 1755;
+          else this.cp_width = 795;
         },
-        
     },
     mounted:function(){
-      setInterval(()=>{
+      // setInterval(()=>{
+      setTimeout(()=>{
       //     //检测玩家是否过期
           if(this.getCookie('uuid')!=0){
               this.$http.post(this.HOST+'/Main',{
@@ -173,11 +201,18 @@
 </script>
 
 <style scoped>
-.main_center{ background:#fff; overflow:hidden; font-family:'微软雅黑';}
+.main_center{ background:#fff;font-family:'微软雅黑';}
 .main_center .option{ margin-top:10px; text-align:center;}
 .main_center h1{text-indent:10px;}
-.main_center .dddfault{font-size:12px; border:1px solid #ccc; width:7px;height:18px; padding:0px 3px; display:block; float:left; overflow:hidden;}
-.main_center .red{font-size:12px; border:1px solid #ccc; width:7px;height:18px; padding:0px 3px; display:block; float:left; overflow:hidden;}
-.main_center .gray{font-size:12px; border:1px solid #ccc; width:7px;height:18px; padding:0px 3px; display:block; float:left; overflow:hidden;}
-.main_center .white{font-size:12px; border:1px solid #ccc; width:7px;height:18px; padding:0px 3px; display:block; float:left; overflow:hidden;}
+.main_center span{font-size:12px; border:1px solid #ccc; width:14px;height:18px;text-align:center; display:block; float:left; overflow:hidden;}
+.main_center_item {margin:0px auto;}
+.main_center_item div{ float:left}
+.main_center_item .zhijie1{ background:#999;}
+.main_center_item .zhijie2{ background:#666;}
+.main_center_item .zhijie3{ background:#999;}
+/*
+.main_center .selected{ background:red}
+.main_center .noselect{ background:#ccc}
+*/
+.main_center .jj{ background:red}
 </style>
